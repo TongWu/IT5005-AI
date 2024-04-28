@@ -568,5 +568,60 @@ $Pr[A|B]=\frac {Pr[B|A]Pr[A]} {Pr[B]}$
 这里，每个项 𝑃(𝑋𝑘∣𝑋1,𝑋2,...,𝑋𝑘−1) 表示在已知 𝑋1到 𝑋𝑘−1​ 的情况下，𝑋𝑘Xk​ 发生的条件概率。
 $Pr[X_{1} \land X_{2} \land ... \land X_{k}] = \prod_{j=1,...,k}Pr[X_{j}|X_{1}\land ... X_{j-1}]$
 ### Independence
-- 假设事件A和B是**独立(Independent)** 的，那么这两个事件就*没有任何关联*，即*知道事件A的信息并不会影响事件B的概率**
+- 假设事件A和B是**独立(Independent)** 的，那么这两个事件就*没有任何关联*，即*知道事件A的信息并不会影响事件B的概率*
 	- 例如：对于这个事件：”如果色子A投出了2，则色子B投出5“。由于这两个事件是独立的，即色子A不会影响到色子B，所以这个事件的概率仍然是$\frac 1 6$
+# 10 - Reinforcement Learning
+## 10.1 - Introduction to Learning Agents
+**强化学习(RL)** 是一种机器学习范式，其核心在*智能体(agent)* 通过与*环境(environment)* 的交互来学习最优行为或策略。智能体的*目标*是最大化其获得的累积奖励(reward)。
+- **智能体（Agent）**：在强化学习框架中，智能体是做出决策的实体，其目标是通过学习选择最佳的行动。
+- **环境（Environment）**：智能体所处并进行交互的外部世界，环境根据智能体的行动提供状态信息和奖励。
+- **状态（State）**：环境的当前情况或智能体的观测结果，智能体基于状态来选择行动。
+- **行动（Action）**：智能体可以选择执行的行为，这些行为会影响环境和下一个状态。
+- **奖励（Reward）**：环境根据智能体的行动给出的即时反馈，智能体的目标是最大化长期的累计奖励。
+- **价值函数（Value Function）**：用于评估一个状态或状态-行动对好坏的函数，它估计从该状态或状态-行动对开始，智能体能获得的预期累计奖励。
+- **Q函数（Action-Value Function）**：与价值函数类似，但它关联了状态-行动对，估计在给定状态下采取特定行动并遵循特定策略的预期回报.
+![image.png](https://images.wu.engineer/images/2024/04/28/202404282041840.png)
+![image.png](https://images.wu.engineer/images/2024/04/28/202404282041929.png)
+## 10.2 - Reinforcement Learning Formulation
+- **Markov Property**: 一个过程或系统的*未来状态仅依赖于当前行动和状态*，与过去的状态和事件无关。其表明系统的记忆只有当前状态，未来演变不依赖于其历史路径。![image.png](https://images.wu.engineer/images/2024/04/28/202404282042353.png)
+## 10.3 - Agent Policy and Optimal Policies
+- **策略（Policy）**：智能体根据当前状态选择行动的策略，可以被视为从状态到行动的映射。策略可能是确定性的，也可能是概率性的。
+	- **Policy** $\pi$ determines agent’s behavior, i.e. actions
+		- Deterministic policy: $a_t=\pi(s_t)$
+		- Stochastic policy: $\pi(a|s_t)=Pr[a_t=a|s_t]$
+	- 在强化学习中，策略 𝜋 是从状态到行为的映射，指导智能体（agent）在给定状态下应该采取什么行动。简单来说，策略定义了智能体的行为模式。
+	- **确定性策略(Deterministic policy)**: 为每一个状态指定了一个具体的行动。如果策略是确定性的，那么给定状态 $s_t$（在时间 𝑡 的状态），策略 𝜋 将总是返回相同的行动 $a_t$​。公式表示为 $a_t=\pi(s_t)$，这意味着在任何时刻 𝑡，智能体都会根据策略 𝜋 选择一个明确的行动 $a_t$
+	- **随机策略(Stochastic Policy)**: 随机策略考虑了行动的概率性，意味着智能体在给定的状态下选择某个行动的概率。在这种情况下，策略 𝜋 提供了一个条件概率分布，用 $\pi(a|s_t)$ 表示，在状态 $s_t$ 下采取行动 𝑎 的概率。它是智能体在时间 𝑡 选择行动 𝑎 的概率 $Pr[a_t=a|s_t]$。
+	  这种策略允许智能体对同一状态有不同的反应，给予了行为更多的灵活性和适应性，这在强化学习中尤其有用，因为它有助于智能体探索和利用环境，以学习最优的行为策略。
+![image.png](https://images.wu.engineer/images/2024/04/28/202404282045671.png)
+- **价值函数（Value Function）**：用于评估一个状态或状态-行动对好坏的函数，它估计从该状态或状态-行动对开始，智能体能获得的预期累计奖励。
+	- $V^{\pi}(s_t)=r_t(a_t,s_{t})+\gamma r_{t+1} (a_{t+1}, s_{t+1}) + \gamma^{2}r_{t+2}(a_{t+2}, s_{t+2})...$
+	- $=\sum_{l=0}^{\inf}\gamma^{l} r_{t+l} (a_{t+l}, s_{t+l})$
+	- $\gamma$是**折扣因子(discount rate)**。它的作用是在计算未来奖励时对其进行折扣，以反映未来奖励的当前价值。Gamma 是一个介于0和1之间的值
+		- 当Gamma值接近1时，智能体更多的考虑长期的奖励
+		- 当Gamma值接近0时，智能体只关心立即的奖励(Greedy)
+![image.png](https://images.wu.engineer/images/2024/04/28/202404282052831.png)
+![image.png](https://images.wu.engineer/images/2024/04/28/202404282149408.png)
+![image.png](https://images.wu.engineer/images/2024/04/28/202404282149880.png)
+## 10.4 - Learning an Optimal Policies
+### Markov Decision Problem
+**马尔可夫决策过程（Markov Decision Process，MDP）** 是一种数学框架，用于建模决策者在时间序列中的决策过程，特别是在不确定环境中。在MDP中，决策者的每个行动都可能导致不同的结果，并且有一定的概率转移到另一个状态。MDP特别适合于解决需要考虑时间和随机性的优化问题。
+MDP由以下元素组成：
+1. **状态集合（S）**：描述系统可能处于的所有状态。
+2. **行动集合（A）**：在每个状态下，决策者可以执行的行动。
+3. **转移概率（P）**：𝑃(𝑠′∣𝑠,𝑎) 描述了执行行动 𝑎 时，从状态 𝑠 转移到新状态 𝑠′ 的概率。
+4. **奖励函数（R）**：𝑅(𝑠,𝑎) 或 𝑅(𝑠,𝑎,𝑠′) 给出了在状态 𝑠 执行行动 𝑎 （并可能转移到状态 𝑠′）所获得的即时奖励。
+5. **折扣因子（𝛾）**：用于衡量未来奖励相对于即时奖励的重要性，取值范围通常在0到1之间。
+
+目标是找到一个**策略** 𝜋（即一个从状态到行动的映射），以最大化预期的累计奖励，也就是所有未来奖励的当前价值之和。策略可以是确定性的，也可以是随机性的。
+### Learning Optimal Policies
+- We want to maximize (discounted) revenue
+	- Note that: $V^{\pi}(s_{t}) = r_{t+1} +\gamma V^{\pi}(s_{t+1})$
+	![image.png](https://images.wu.engineer/images/2024/04/28/202404282313603.png)
+- Optimal Policy: $\pi(s)$ is an action in $argmax_{a}{r(s,a)+\gamma V(\delta(s,a))}$
+![image.png](https://images.wu.engineer/images/2024/04/28/202404282314515.png)
+## 10.5 - Q-Learning
+![image.png](https://images.wu.engineer/images/2024/04/28/202404282315957.png)
+![image.png](https://images.wu.engineer/images/2024/04/28/202404282315491.png)
+![image.png](https://images.wu.engineer/images/2024/04/28/202404282315989.png)
+
