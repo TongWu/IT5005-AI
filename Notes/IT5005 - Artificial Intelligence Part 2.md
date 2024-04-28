@@ -290,7 +290,7 @@ Alpha-beta 剪枝基于两个参数：alpha 和 beta。这两个参数分别代�
 - **Alpha（α）**：在MAX玩家的视角下，alpha 代表其可以确保的最低得分，也就是说，MAX玩家在游戏过程中不会接受比alpha更低的得分。
 - **Beta（β）**：在MIN玩家的视角下，beta 代表其可以确保的最高得分，也就是说，MIN玩家在游戏过程中不会接受比beta更高的得分。
 ### 工作过程
-1. **初始化**：在树的根节点开始，alpha 初始化为负无穷大（表示MAX玩家的得分没有下限），beta 初始化为正无穷大（表示MIN玩家的得分没有上限）。
+1. **初始化**：在树的根节点开始，*alpha 初始化为负无穷大*（表示MAX玩家的得分没有下限），*beta 初始化为正无穷大*（表示MIN玩家的得分没有上限）。
 2. **递归搜索**：通过递归地应用极小化极大算法，在每个节点计算最优策略。同时，每当在树的某一路径上发现一个可能的得分时，都会更新alpha 或 beta 的值。
 3. **剪枝决策**：
     - 当在某个节点的搜索中发现alpha 值大于或等于beta 值时，就可以停止在该节点进一步搜索。这是因为，对于MIN玩家而言，任何高于beta 的得分都是不可接受的（因为它们已经找到了更好的选项），而对于MAX玩家而言，任何低于alpha 的得分也是不可接受的。
@@ -518,3 +518,55 @@ Alpha-beta 剪枝能够显著减少需要评估的节点数量，尤其是在搜
 简单来说，如果变量 𝑋 的某个值没有任何与之相对应的变量 𝑌 的值满足约束，那么这个值就可以从 𝑋 的域中移除，因为它不可能出现在任何问题的解中。
 - 例如：$D_{i}= \{1,4,5\}, D_j=\{1,2,3\}$, 同时我们有约束：$X_i > X_j$。这时，如果我们尝试将*值1赋予$X_i$*，即$X_{i} \gets 1$, 那么就*没有任何可能的值可以赋给*$X_j$而不违反约束。因此我们应该从$D_i$中移除$1$这个值。
 ![image.png](https://images.wu.engineer/images/2024/04/27/202404272259741.png)
+# 9 - Uncertainty
+## 9.1 - Uncertainty
+Let taxi agent’s action $A_t$ = leave for airport $t$ minutes before flight. *Will $A_t$ get me there on time?*
+- Source of uncertainty:
+	- Partial observability (road state, other driver’s plan)
+	- Noisy sensors (traffic reports, fuel sensor)
+	- Uncertainty in action outcomes (flat tire, accident)
+	- Complexity in modeling and predicting traffic (congestion)
+- Logical agent either
+	- risks falsehood: “$A_{25}$ will get me there on time”, or
+	- reaches weaker conclusion: “$A_{25}$ will get me there on time *if* there’s no accident on the bridge *and* it doesn’t rain *and* my tires remain intact…”
+### Random Variables
+#### Domains
+- Boolean: coin is either *heads* or *tails* (True or False)
+- Discrete: a die can have values {1, …, 6}
+#### Events
+- $Heads(X)$ the coin flipped to heads
+- $Even(X)$ the die has value $\in {2, 4, 6}$
+- Given a random variable $X$, let $D_X$ be its domain
+- **Atomic event**: an assignment of a value to each random variable; a singleton event
+	- We roll two different dice
+![image.png](https://images.wu.engineer/images/2024/04/28/202404281413955.png)
+- Red die = $X_1$, blue die = $X_2$
+- Event: $X_1+X_2=8$
+## 9.2 - Probability
+- $Pr[A|B]=\frac {Pr[B|A]Pr[A]} {Pr[B]}$：在事件B发生的条件下，事件A发生的概率
+- $Pr[A\land B]=𝑃(𝐴∩𝐵)=𝑃(𝐴,𝐵)$：事件A和事件B同时发生的概率
+### Axioms of probability
+- Let $X$ be a random variable with finite domain $D_X$
+- A probability distribution over $D_X$ assigns a value $p_{x}(x) \in [0,1]$ to every $x \in D_X$
+$\sum_{x\in D_{X}}p_x(x)=1$
+![image.png](https://images.wu.engineer/images/2024/04/28/202404281416502.png)
+### Joint Probability
+- Given two random variables $X$ and $Y$, the *joint probability* of an atomic event $(x,y) \in D_{X} \times D_Y$ is $p_{X,Y}(x,y)=Pr[X=x \land Y=y]$
+- In particular $p_{X}(x)=\sum{y\in D_Y}p_{X,Y}(x,y)$
+- **联合概率(Joint Probability)** 指的是两个（或多个）事件同时发生的概率。如果事件A和事件B是两个离散的随机事件，那么它们同时发生的联合概率表示为 𝑃(𝐴∩𝐵) 或 𝑃(𝐴,𝐵)。对于连续变量，会使用概率密度函数来表达。
+**示例**：如果抛两枚硬币，第一枚正面（事件A）和第二枚反面（事件B）同时出现的概率是联合概率 𝑃(𝐴∩𝐵)。
+### Posterior / Conditional Probability
+**条件概率(Conditional Probability)** 是给定一个事件发生的情况下，另一个事件发生的概率。表示为 𝑃(𝐴∣𝐵)，读作“在B发生的条件下A发生的概率”。
+**示例**：如果已知今天下雨（事件B），则某人带伞（事件A）的概率是 𝑃(𝐴∣𝐵)。
+
+**后验概率(Posterior Probability)** 是贝叶斯统计中的一个概念，是在给定数据和先验概率的情况下，对概率的更新。在观察到新证据后，某个事件的后验概率是我们对该事件可能性的重新评估。
+在**贝叶斯定理(Bayes Rule)** 中，后验概率的计算方法为： 
+$Pr[A|B]=\frac {Pr[B|A]Pr[A]} {Pr[B]}$
+**链式法则（Chain Rule）** 是一种计算多个事件联合概率的方法。它基于这样的事实：任何多维随机变量的联合概率分布都可以分解为只有一个变量的条件概率分布的乘积。
+假设我们有随机变量 𝑋1,𝑋2,...,𝑋𝑛​，链式法则允许我们将这些变量的联合概率表示为：
+𝑃(𝑋1,𝑋2,...,𝑋𝑛)=𝑃(𝑋1)×𝑃(𝑋2∣𝑋1)×𝑃(𝑋3∣𝑋1,𝑋2)×...×𝑃(𝑋𝑛∣𝑋1,𝑋2,...,𝑋𝑛−1)
+这里，每个项 𝑃(𝑋𝑘∣𝑋1,𝑋2,...,𝑋𝑘−1) 表示在已知 𝑋1到 𝑋𝑘−1​ 的情况下，𝑋𝑘Xk​ 发生的条件概率。
+$Pr[X_{1} \land X_{2} \land ... \land X_{k}] = \prod_{j=1,...,k}Pr[X_{j}|X_{1}\land ... X_{j-1}]$
+### Independence
+- 假设事件A和B是**独立(Independent)** 的，那么这两个事件就*没有任何关联*，即*知道事件A的信息并不会影响事件B的概率**
+	- 例如：对于这个事件：”如果色子A投出了2，则色子B投出5“。由于这两个事件是独立的，即色子A不会影响到色子B，所以这个事件的概率仍然是$\frac 1 6$
