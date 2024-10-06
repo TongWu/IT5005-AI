@@ -264,6 +264,8 @@ A game is defined by 7 components:
 	2. 黑方有一个赢的策略$s^*_b$
 	3. 双方各自都有一个不输的策略
 ### Minimax算法
+
+Can minimax algorithm always find an optimal solution in zero-sum game?
 #### MAX 玩家
 - **最大化最小收益**：MAX玩家的目标是最大化其可能获得的最小收益。这意味着MAX玩家在考虑所有可能的对手（MIN玩家）的反应后，选择一种策略，使得在最坏情况下的收益（即MIN玩家尽可能使MAX玩家收益最小化的情况）达到最大。简单来说，MAX玩家在考虑对手可能的最优反应（对MIN玩家而言）后，选择能保证自己获得最高最小收益的行动。
 #### MIN 玩家
@@ -324,6 +326,108 @@ Alpha-beta 剪枝能够显著减少需要评估的节点数量，尤其是在搜
 		- **回归问题**：例如，预测房价或股票价格
 	- 在监督学习中，网络通过比较其输出与正确的标签，逐步调整其内部权重，以最小化误差并提高预测的准确性。这个过程通常涉及到一个优化算法（如反向传播和梯度下降），用来调整网络权重，使得预测结果尽可能接近实际结果。
 ## 7.2 - Supervised Learning
+Is this true or false: For search trees that are infinitely deep, DFS using iterative deepening is always decidable (i.e. we know whether or not there is a solution)
+Which one of the following statements about the perceptron learning rule is TRUE?
+A: The PLR can be extended, unmodified, to multi-layer perceptrons
+B: The PLR creates non–linear decision boundaries
+C: The learning rate in PLR should start small and increase as learning progresses to reach optimal parameter values faster.
+D: The PLR does not take into account the magnitude and sign of the input.
+>>> Which one of the following statements about the perceptron learning rule is TRUE?
+... A: The PLR can be extended, unmodified, to multi-layer perceptrons
+... B: The PLR creates non–linear decision boundaries
+... C: The learning rate in PLR should start small and increase as learning progresses to reach optimal parameter values f
+... aster.
+... D: The PLR does not take into account the magnitude and sign of the input.
+The correct answer is D: The PLR does not take into account the magnitude and sign of the input.
+
+The Perceptron Learning Rule (PLR) is a type of supervised learning algorithm used for training single-layer
+perceptrons. It's a simple, linear, and incremental learning rule that updates the weights of the perceptron based
+on the difference between the predicted output and the actual target value.
+
+Here's why options A-C are incorrect:
+
+A: The PLR is not directly extendable to multi-layer perceptrons (MLPs) because it relies heavily on the linearity
+of the decision boundary. MLPs have non-linear decision boundaries, which require more sophisticated learning rules
+like backpropagation.
+
+B: The PLR creates linear decision boundaries, not non-linear ones. It's designed for linearly separable data and is
+not suitable for problems with complex or non-linear relationships between inputs and outputs.
+
+C: While it's true that the learning rate can be adjusted during training, there is no inherent need to start small
+and increase as learning progresses. In fact, a constant or decreasing learning rate is often used in practice.
+
+The PLR does ignore the magnitude and sign of the input, which might seem unusual. However, this is because the
+algorithm relies on the dot product between the input vector and the weight vector to compute the output. The
+magnitude and sign of the input are effectively averaged out during the learning process.
+
+
+Which of the following are indicators of underfitting in a dense multilayer perceptron?
+A: Network shows a low training accuracy
+B: Network shows a higher accuracy on training data but a lower accuracy on testing data
+C: Network shows a lower loss on validation data and a higher loss on training data
+D: Network shows a low training loss and a high validation loss
+E: Network shows a low training and validation losses.
+>>> Which of the following are indicators of underfitting in a dense multilayer perceptron?
+... A: Network shows a low training accuracy
+... B: Network shows a higher accuracy on training data but a lower accuracy on testing data
+... C: Network shows a lower loss on validation data and a higher loss on training data
+... D: Network shows a low training loss and a high validation loss
+... E: Network shows a low training and validation losses.
+The correct answers are:
+
+B: Network shows a higher accuracy on training data but a lower accuracy on testing data
+C: Network shows a lower loss on validation data and a higher loss on training data
+D: Network shows a low training loss and a high validation loss
+
+Underfitting in a dense multilayer perceptron (MLP) typically occurs when the model is too simple to capture the
+underlying patterns in the data. Here's why options B-D are indicators of underfitting:
+
+B: **Overfitting on training data**: When an MLP becomes too complex, it can memorize the training data and perform
+well on it but poorly on new, unseen data (e.g., testing data). This is known as overfitting on training data.
+
+C: **Underfitting on validation data**: If the model underfits the data, it will generalize poorly to new data. The
+validation loss should be lower than the training loss because the model is not complex enough to fit the noise in
+the training data. When the validation loss is higher than the training loss, it's a sign that the model is too
+simple.
+
+D: **Low training loss and high validation loss**: This scenario indicates that the model has memorized the training
+data but fails to generalize well to new data. The low training loss suggests that the model has learned to fit the
+noise in the training data, while the high validation loss shows that it's not capturing the underlying patterns.
+
+A: **Low training accuracy**: While a low training accuracy can be an indicator of underfitting, it's not a
+definitive sign. A low training accuracy can also be due to overfitting or a poor choice of hyperparameters.
+
+E: **Low training and validation losses**: This scenario suggests that the model is performing well on both the
+training and validation sets, which is actually indicative of good generalization rather than underfitting.
+
+What roles do alpha and gamma play in the value iteration algorithm? Does alpha increase or decreases the amount of update mode to Q as time goes by? Does gamma control the effect of Q value of future states, or it controls the effect the immediate reward has?
+... date mode to Q as time goes by? Does gamma control the effect of Q value of future states, or it controls the effect t
+... he immediate reward has?
+I apologize for any confusion earlier!
+
+In the Value Iteration (VI) algorithm:
+
+* `alpha` (`α`) is the learning rate or step size. It determines how much each iteration updates the value function
+`Q(s, a)` as time goes by.
+	+ As `α` increases, the update magnitude to `Q(s, a)` decreases. This means that the algorithm becomes more conser
+conservative in its updates and converges slower.
+	+ As `α` decreases, the update magnitude to `Q(s, a)` increases. This means that the algorithm is more aggressive 
+in its updates and may converge faster, but also risks overshooting or oscillating around the optimal value
+function.
+* `gamma` (`γ`) is the discount factor. It determines how much importance is given to immediate rewards
+versus future rewards when evaluating the value of an action.
+	+ A higher `γ` means that the algorithm gives more weight to distant future rewards, and less weight to immediate 
+rewards.
+	+ A lower `γ` means that the algorithm focuses more on immediate rewards and gives less weight to future rewards.
+
+To summarize:
+
+* `α` controls the update magnitude to `Q(s, a)` as time goes by. Increasing `α` makes the updates smaller, while
+decreasing `α` makes them larger.
+* `γ` controls the relative importance of immediate rewards versus future rewards when evaluating the value of an
+action. A higher `γ` gives more weight to future rewards, while a lower `γ` focuses on immediate rewards.
+
+Thank you for pointing out my earlier mistake!
 在监督学习中，我们提供给神经网络的数据包括输入样本和相应的目标输出（也称为标签）。这些输入输出对通常表示为 (𝑥𝑖,𝑦𝑖)，其中 𝑥𝑖 是样本输入，𝑦𝑖​ 是神经网络需要学习预测或识别的目标或类别。这种学习模式的核心是教网络如何识别或预测输入数据的正确输出。
 我们会学习与这种学习模式有关的两种监督学习算法：
 1. **Linear Perceptrons 线性感知器**:
@@ -341,6 +445,7 @@ Alpha-beta 剪枝能够显著减少需要评估的节点数量，尤其是在搜
 	5. **偏置b**: 偏置项 𝑏 类似于权重，但它不依赖于任何输入，而是为了调整输出阈值（即决策边界的位置）。在模型中，偏置常常被视为权重向量中的一个额外维度 $w_0$​，与一个常数输入（如1）相乘。
 ![image.png](https://images.wu.engineer/images/2024/04/26/202404270019217.png)
 ### Multi-Layer Perceptrons (MLP)
+
 ### XOR Problem
 在XOR（exclusive OR，异或）问题中，我们通常考虑两个二进制输入变量 𝑥1​ 和 𝑥2​，这两个变量可以取值0或1。输出（𝑦）是两个输入的异或结果，即：
 - 当 𝑥1和 𝑥2 相同时（都是0或都是1），输出 𝑦 为0。
@@ -510,6 +615,7 @@ Alpha-beta 剪枝能够显著减少需要评估的节点数量，尤其是在搜
 	- **弧一致性（Arc Consistency）**：在变量赋值后检查所有二元约束，确保每个变量的每个可能值至少有一个与之兼容的值在连接变量的域中
 4. **Early Failure Detection (提前检测失败)**：如果能够在搜索过程中早点检测到不可避免的失败，可以避免无用的搜索，从而提高搜索效率.
 	- **检查死锁**：如果某个变量的域被减少到空，意味着当前的部分赋值不能导致解决方案，可以立即回溯
+In a maze problem, the heuristic function use direct distance (sqrt(x_a-x_b)^2+(y_a-y_b)^2), is this function consistency and admissble?
 ### Arc Consistency 弧一致性
 **弧一致性（Arc Consistency，AC）** 是一种在约束满足问题（CSP）中应用的约束传播技术。弧一致性关注的是如何通过处理变量之间的约束来减少变量的可能取值，从而简化问题。
 #### 定义
@@ -517,7 +623,34 @@ Alpha-beta 剪枝能够显著减少需要评估的节点数量，尤其是在搜
 - 对于变量 𝑋 的*域中的每一个值*，都应该至少有一个在变量 𝑌 的域中的值*可以与之配对而不违反约束*。
 简单来说，如果变量 𝑋 的某个值没有任何与之相对应的变量 𝑌 的值满足约束，那么这个值就可以从 𝑋 的域中移除，因为它不可能出现在任何问题的解中。
 - 例如：$D_{i}= \{1,4,5\}, D_j=\{1,2,3\}$, 同时我们有约束：$X_i > X_j$。这时，如果我们尝试将*值1赋予$X_i$*，即$X_{i} \gets 1$, 那么就*没有任何可能的值可以赋给*$X_j$而不违反约束。因此我们应该从$D_i$中移除$1$这个值。
+Is this true or false: For search trees that are infinitely deep, DFS using iterative 
+Is this true or false: Greedy algorithms always give an optimal solution since it always picks the option with the lowest cost (or highest gain)
+deepening is always decidable (i.e. we know whether or not there is a solution)
+>>> Is this true or false: The fringe set in DFS can be implemented with a stack.
+This is TRUE.
+
+The fringe set in Depth-First Search (DFS) can indeed be implemented using a stack. In fact, the stack data
+structure is often used to implement the fringe set in DFS because it provides an efficient way to manage the nodes
+that are yet to be visited.
+
+When you use a stack to implement the fringe set, each node's children are added to the stack as they are discovered
+during the traversal. This allows the algorithm to keep track of which nodes need to be visited next, without having
+to explicitly store all the nodes in memory.
+
+So, if you're implementing DFS, using a stack for the fringe set is a valid and efficient approach!
 ![image.png](https://images.wu.engineer/images/2024/04/27/202404272259741.png)
+### Arc Consistency Algorithm AC-3
+#### AC-3算法的工作原理
+1. **初始化**：
+    - 算法维护一个队列，队列中的每个元素都是变量之间的约束的弧（即约束中涉及的一对变量）。
+    - 初始时，所有的弧都被加入到队列中。
+2. **处理队列**：
+    - 从队列中取出一个弧 (𝑋,𝑌)(X,Y)。
+    - 检查弧 (𝑋,𝑌)(X,Y) 是否满足弧一致性。如果 𝑌Y 的某个值不满足与 𝑋X 的约束（即对于 𝑋X 的某个值，没有任何 𝑌Y 的值能满足约束），那么 𝑋X 的那个值将被删除。
+3. **传播影响**：
+    - 每当一个变量 𝑋X 的域被修改（即删除了某个值），所有与 𝑋X 相关的其他弧都会被重新加入队列（除了导致 𝑋X 值删除的弧 (𝑋,𝑌)(X,Y)），以便重新检查这些弧是否满足弧一致性。
+4. **终止条件**：
+    - 当队列为空时，算法终止。此时，如果所有的变量域都非空，那么CSP的这部分至少在考虑的约束内是弧一致的。
 # 9 - Uncertainty
 ## 9.1 - Uncertainty
 Let taxi agent’s action $A_t$ = leave for airport $t$ minutes before flight. *Will $A_t$ get me there on time?*
